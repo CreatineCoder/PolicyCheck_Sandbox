@@ -1,0 +1,32 @@
+# Open Bandit Dataset pipeline (spec sections 6.4, 10: E02 and E02b).
+
+seed: 20260815
+
+dataset:
+  root: data/obd_full        # data/obd_sample for tests and smoke runs
+  behavior_policy: random    # random | bts
+  campaign: all              # all | men | women
+  # Position handling, option (a) in the spec: filter to a single slot and treat
+  # it as a standard contextual bandit. Costs two-thirds of the rows; the
+  # alternative compound/slate treatments are recorded in docs/decisions.md.
+  position_strategy: filter
+  keep_position: 1
+
+features:
+  # user_feature_* are hashed categorical strings, not numbers. One-hot them;
+  # feeding them to a numeric model raw produces garbage.
+  user_feature_encoding: one_hot
+  use_affinity_features: true
+  use_item_context: true
+
+ope:
+  ips_clip_tau: 100.0        # bts logs reach importance weights near 278
+  cross_fitting_folds: 5
+  bootstrap:
+    n_resamples: 1000
+    alpha: 0.05
+
+cross_policy_validation:      # E02b
+  directions:
+    - {logs: random, target: bts}   # easier: uniform logging, perfect overlap
+    - {logs: bts, target: random}   # harder: non-uniform logging, poorer overlap

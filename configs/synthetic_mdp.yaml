@@ -1,0 +1,42 @@
+# Sequential session MDP, offline RL and sequential OPE (spec section 8).
+
+seed: 20260815
+
+env:
+  d_interest: 8
+  n_actions: 10
+  horizon: 20
+  gamma: 0.99
+  # At least one high-engagement, high-fatigue "clickbait" action, so the myopic
+  # and far-sighted optimal policies differ. That gap is verified and logged
+  # before any of Part 2 proceeds.
+  clickbait_actions: [0]
+  fatigue_termination_scale: 0.15
+
+logging_policy:
+  kind: narrow_heuristic
+  # Deliberately narrow support: only ever selects these actions. This is the
+  # realistic production case and it sets up the distribution-shift result.
+  allowed_actions: [1, 3, 5, 7]
+  epsilon: 0.1
+  n_episodes: 5000
+
+fqi:
+  n_iterations: 30
+  regressor: xgboost         # xgboost | one_model_per_action
+  max_depth: 6
+  n_estimators: 200
+  learning_rate: 0.1
+
+cql:
+  hidden_sizes: [256, 256]
+  learning_rate: 3.0e-4
+  batch_size: 256
+  n_gradient_steps: 50000
+  polyak_tau: 0.005
+  alpha_sweep: [0.0, 0.1, 1.0, 5.0, 10.0]
+  seeds: [0, 1, 2, 3, 4]
+
+sequential_ope:
+  horizons: [5, 10, 20]
+  n_rollouts_true_value: 20000

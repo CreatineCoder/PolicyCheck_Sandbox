@@ -1,0 +1,20 @@
+# FastAPI serving layer (spec section 9).
+
+host: 127.0.0.1
+port: 8000
+
+policy_artifacts:
+  # Versioned artifact directory. No retraining happens in the request path.
+  root: artifacts/policies
+  default_policy_id: linucb
+  default_policy_version: v1
+
+logging:
+  # Append-only sink written in the exact BanditFeedback schema, so logs the
+  # service produces are directly consumable by the OPE pipeline. Without the
+  # propensity in every record the service's own decisions are unevaluable --
+  # that is the entire point of this layer.
+  sink: data/serving_logs
+  format: parquet
+  flush_every: 100
+  reward_join_window_hours: 24

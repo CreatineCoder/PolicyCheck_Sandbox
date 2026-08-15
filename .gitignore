@@ -1,0 +1,18 @@
+data/
+!data/.gitkeep
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+mlruns/
+*.egg-info/
+build/
+dist/
+.ipynb_checkpoints/
+
+# reports/ is intentionally tracked: the figures and result tables are the
+# deliverable a reviewer looks at.

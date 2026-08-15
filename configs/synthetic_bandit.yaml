@@ -1,0 +1,45 @@
+# Synthetic bandit environment and validation-harness sweeps (spec sections 6.1, 7).
+# No hyperparameter is hard-coded in src/; everything lives here.
+
+seed: 20260815
+
+env:
+  d_context: 10
+  n_actions: 10
+  # Nonlinearity coefficient. beta = 0 makes a linear reward model perfectly
+  # specified (Direct Method looks great); beta > 0 misspecifies it and exposes
+  # the doubly-robust property.
+  beta: 1.0
+  reward: bernoulli
+
+logging_policy:
+  kind: epsilon_greedy
+  # Mixing weight with uniform. 1.0 = uniform logging (perfect overlap),
+  # small values = near-deterministic logging (overlap failure).
+  epsilon: 0.5
+
+target_policy:
+  kind: epsilon_greedy
+  epsilon: 0.1
+
+data:
+  n_rounds: 10000
+  # Fresh contexts used for the exact true_policy_value integral.
+  n_true_value_samples: 100000
+
+ope:
+  ips_clip_tau: null       # null disables clipping
+  cross_fitting_folds: 5
+  bootstrap:
+    n_resamples: 1000
+    alpha: 0.05
+
+harness:
+  n_replications: 100
+  sweeps:
+    overlap:
+      epsilon: [1.0, 0.5, 0.3, 0.2, 0.1, 0.05]
+    misspecification:
+      beta: [0.0, 0.5, 1.0, 2.0, 4.0]
+    sample_size:
+      n_rounds: [1000, 5000, 20000, 100000, 500000]
