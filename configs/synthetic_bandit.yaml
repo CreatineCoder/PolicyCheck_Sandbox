@@ -10,6 +10,11 @@ env:
   # specified (Direct Method looks great); beta > 0 misspecifies it and exposes
   # the doubly-robust property.
   beta: 1.0
+  # Frequency inside the sin term. At frequency 1 the nonlinearity is nearly
+  # collinear with the linear term over the bulk of a standard normal context,
+  # so the "misspecification" is far weaker than beta suggests. Above 1 it is
+  # genuine. See docs/decisions.md.
+  nonlinear_frequency: 3.0
   reward: bernoulli
 
 logging_policy:

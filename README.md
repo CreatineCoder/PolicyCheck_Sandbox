@@ -25,5 +25,11 @@ make typecheck  # mypy --strict on src/odl
 
 ## Build status
 
-Step 0 (OBD availability) and step 1 (types, schema validation, scaffolding, CI)
-of the build order are complete. Everything after that is unbuilt.
+Phase 0 (steps 0–1: OBD availability, types, schema validation, scaffolding, CI)
+and Phase 1 (steps 2–5: synthetic environment, uniform and epsilon-greedy
+policies, IPS and SNIPS, bootstrap intervals, minimal validation harness) are
+complete. The Phase 1 gate passes: under uniform logging IPS recovers the true
+policy value with +0.41% relative bias and 97.5% CI coverage.
+
+Phase 2 (reward model, Direct Method, doubly robust with cross-fitting, full
+sweeps) is next. See `docs/build-plan.md`.
